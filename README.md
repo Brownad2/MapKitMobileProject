@@ -7,7 +7,7 @@ There were a few discerepancies I found when doing research for my app and what 
 # Step-by-Step-Process
 To start with, we want to create the variables that define our map initially. While all you need to make your map is just Map(), having the ability to tailor the starting locaton can be helpful for you and your users. To do this, I first defined the starting display region and subsiquent MapCameraPosition. For this example, my code centers around GVSU's coordinates. 
 
-'''
+```
  @State var region = MKCoordinateRegion(
         center: .init(latitude: 42.96_346, longitude: -85.88_868),
         span: .init(latitudeDelta: 4.5,longitudeDelta: 4.5)
@@ -16,23 +16,23 @@ To start with, we want to create the variables that define our map initially. Wh
   var cameraPosition: MapCameraPosition { 
     MapCameraPosition.region(region)
    }
-'''
+```
 
 With these basic parameters defined, we can make our map display.
 
-'''
+```
  Map (position: .constant(cameraPosition), bounds: nil)
-'''
+```
 
 Created maps can have a lot of functionality added to them quite easily in MapKit. For instance, in my code, I wanted the map to expand to fill the space more so I added to the end of the map:
 
-'''
+```
 .edgesIgnoringSafeArea(.all)
-'''
+```
 
-Another great example of simple and intuitive functionality to add is with 'mapControls'. Map controls encompass every espect that a user could want, from changing the pitch of the map, to adding a button that centers on the user's location, to adding a compass feature. Here are a few you can add as an example, ('MapZoomStepper' may be flagged to take out as it is only availible for Mac's running your app):
+Another great example of simple and intuitive functionality to add is with `mapControls`. Map controls encompass every espect that a user could want, from changing the pitch of the map, to adding a button that centers on the user's location, to adding a compass feature. Here are a few you can add as an example, (`MapZoomStepper` may be flagged to take out as it is only availible for Mac's running your app):
 
-'''
+```
 .mapControls {
   MapCompass
   MapPitchToggle 
@@ -40,40 +40,40 @@ Another great example of simple and intuitive functionality to add is with 'mapC
   MapUserLocationButton 
   MapZoomStepper
 }
-'''
+```
 
-Further ways you can customize your map include the design itself, which you can change to make look realistic, account for realistic heights, and even toggle on and off road markers etc. All this can be done using the '.mapStyle' suffix:
+Further ways you can customize your map include the design itself, which you can change to make look realistic, account for realistic heights, and even toggle on and off road markers etc. All this can be done using the `.mapStyle` suffix:
 
-'''
+```
 // Imagery uses realistic textures and removes road icons
 .mapStyle(.imagery(elevation: .realistic)
 // Hybrid uses the realistic style but still keeps the road information
 .mapStyle(.hybrid)
-'''
+```
 
-Enough with the map beautification, lets get some more information on our map by inserting a 'Marker'. To do this, we just need the longitude and latitude coordinates of where we want to place our marker. To add a marker at GVSU, we make a 'CLLocationCoordinate2D' at the place we want. Then all we have to do is add that 'CLLocationCoordinate2D' as a marker:
+Enough with the map beautification, lets get some more information on our map by inserting a `Marker`. To do this, we just need the longitude and latitude coordinates of where we want to place our marker. To add a marker at GVSU, we make a `CLLocationCoordinate2D` at the place we want. Then all we have to do is add that `CLLocationCoordinate2D` as a marker:
 
-'''
+```
 let GVSU = CLLocationCoordinate2D(latitude: 42.96_346,longitude: -85.88_868)
 
 Map() {
   Marker("GVSU", monogram: Text("GV"), coordinate: GVSU)
 }
-'''
+```
 
-As you can see, markers have loads of customization options as well, being able to select things like the name, the image, or monogram if you want initials in the pin. Even the color can be changed with '.tint(.'*color*')'
+As you can see, markers have loads of customization options as well, being able to select things like the name, the image, or monogram if you want initials in the pin. Even the color can be changed with `.tint(.`*color*`)`
 
 This stationary marker is neat, but we want one to appear when we press on the map. For that, we have to make sure the Map is in a MapReader. This will allow us to see where the user taps. 
 
-'''
+```
 MapReader { readMap in
                 Map (position: .constant(cameraPosition), bounds: nil) 
           }
-'''
+```
 
 We also need to define our pin. For this case, we only care about the coordinate and a name for each point.
 
-'''
+```
 class MapPin: NSObject, MKAnnotation {
         let title: String?
         let coordinate: CLLocationCoordinate2D
@@ -82,11 +82,11 @@ class MapPin: NSObject, MKAnnotation {
             self.coordinate = coordinate
         }
     }
-'''
+```
 
 Next, we'll add the actual funcinality to when a tap occurs. We do this by adding:
 
-'''
+```
 Map (position: .constant(cameraPosition), bounds: nil) {
         if let tappedLocation = selectedLocal {
             Marker("\(tappedLocation.latitude), \(tappedLocation.longitude)", coordinate: tappedLocation)
@@ -98,11 +98,11 @@ Map (position: .constant(cameraPosition), bounds: nil) {
         let markerPlacement = MapPin(title: "Current Placement", coordinate: tappedLocation)
         }
     }
-'''
+```
 
 To break this down. We detect the tap, grab the position of the tap and use our MapReader to find the coordinates of that place on screen. We then have a marker declared directly after the map is created that places the marker on the tapped location's coordinates everytime the tappedLocation is changed. With all the additions together, we get this:
 
-'''
+```
 class MapPin: NSObject, MKAnnotation {
         let title: String?
         let coordinate: CLLocationCoordinate2D
@@ -127,8 +127,7 @@ var body: some View {
                     }
             }
   }
-
-  '''
+```
 
 ## Conclusion
 
